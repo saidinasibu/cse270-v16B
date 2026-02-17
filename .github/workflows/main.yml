@@ -1,0 +1,33 @@
+name: CSE 270 W06 UI Smoke Tests
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium pytest
+
+      - name: Start HTTP server on port 5500
+        uses: Eun/http-server-action@v1.0.11
+        with:
+          directory: .
+          port: 5500
+
+      - name: Run smoke tests only
+        run: |
+          pytest -q tests/test_smokeTest.py
